@@ -1,0 +1,12 @@
+[package]
+name = "markdownflow"
+version = "0.1.0"
+edition = "2024"
+description = "A Rust parser that converts Markdown syntax into HTML markup, focusing on heading transformations for web rendering and documentation generation"
+keywords = ["markdown", "html", "parser", "converter", "text-processing"]
+categories = ["parsing", "text-processing"]
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
