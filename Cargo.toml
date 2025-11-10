@@ -2,11 +2,13 @@
 name = "markdownflow"
 version = "0.1.0"
 edition = "2024"
-description = "A Rust parser that converts Markdown syntax into HTML markup, focusing on heading transformations for web rendering and documentation generation"
+description = "A full-featured Rust parser converting Markdown syntax (headings, bold, strikethrough, links) into HTML markup for file processing and interactive usage"
 keywords = ["markdown", "html", "parser", "converter", "text-processing"]
 categories = ["parsing", "text-processing"]
+repository = "https://github.com/majonory/markdownflow"
 
 [lib]
 path = "src/lib.rs"
 
 [dependencies]
+
