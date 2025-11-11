@@ -6,4 +6,7 @@ pub use parser::{
     parse_strikethrough,
     parse_link,
     parse_markdown,
+    parse_image, 
+    parse_italic, 
+    parse_blockquote,
 };

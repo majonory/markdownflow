@@ -1,4 +1,5 @@
-use markdownflow::{parse_bold, parse_heading, parse_link, parse_strikethrough};
+use markdownflow::{parse_bold, parse_heading, parse_link, parse_strikethrough, parse_image, parse_italic, parse_blockquote};
+
 use std::env;
 use std::fs;
 
@@ -67,9 +68,13 @@ fn parse_file(input: &str, output: &str) {
             }
         }
 
+        processed = parse_image(&processed);
         processed = parse_bold(&processed);
         processed = parse_strikethrough(&processed);
         processed = parse_link(&processed);
+        processed = parse_blockquote(&processed);
+        processed = parse_italic(&processed);
+
 
         html.push_str("<p>");
         html.push_str(&processed);
@@ -89,10 +94,13 @@ fn show_help() {
     println!("====================================================");
     println!("          ПІДТРИМУВАНІ ЕЛЕМЕНТИ MARKDOWN:");
     println!();
-    println!("   • Заголовки:      # до ######");
-    println!("   • Жирний текст:   **текст**");
-    println!("   • Закреслений:    ~~текст~~");
-    println!("   • Посилання:      [текст](url)");
+    println!("   * Заголовки:      # до ######");
+    println!("   * Жирний текст:   **текст**");
+    println!("   * Закреслений:    ~~текст~~");
+    println!("   * Посилання:      [текст](url)");
+    println!("   * Курсив:         _текст_");
+    println!("   * Зображення:     ![текст](img)");
+    println!("   * Цитатат:        >текст");
     println!("====================================================");
     println!("               ГРАМАТИЧНІ ПРАВИЛА:");
     println!();

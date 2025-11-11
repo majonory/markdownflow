@@ -96,6 +96,94 @@ pub fn parse_link(input: &str) -> String {
     result
 }
 
+
+pub fn parse_image(input: &str) -> String {
+    let mut result = input.to_string();
+
+    while let Some(start) = result.find("![") {
+        if let Some(close_bracket) = result[start..].find(']') {
+            let close_bracket_pos = start + close_bracket;
+            let alt_text = &result[start + 2..close_bracket_pos];
+
+            if close_bracket_pos + 1 < result.len()
+                && &result[close_bracket_pos + 1..close_bracket_pos + 2] == "("
+            {
+                if let Some(close_paren) = result[close_bracket_pos + 2..].find(')') {
+                    let close_paren_pos = close_bracket_pos + 2 + close_paren;
+                    let url = &result[close_bracket_pos + 2..close_paren_pos];
+
+                    if !url.is_empty() {
+                        let replacement = format!("<img src=\"{}\" alt=\"{}\">", url, alt_text);
+                        result.replace_range(start..close_paren_pos + 1, &replacement);
+                        continue;
+                    }
+                }
+            }
+        }
+        break;
+    }
+    result
+}
+
+pub fn parse_italic(input: &str) -> String {
+    let mut result = input.to_string();
+
+    while let Some(start) = result.find('_') {
+        if let Some(end) = result[start + 1..].find('_') {
+            let end_pos = start + 1 + end;
+            let content = &result[start + 1..end_pos];
+
+            if content.is_empty() {
+                break;
+            }
+
+            let replacement = format!("<em>{}</em>", content);
+            result.replace_range(start..end_pos + 1, &replacement);
+        } else {
+            break;
+        }
+    }
+    result
+}
+
+pub fn parse_blockquote(input: &str) -> String {
+    let lines: Vec<&str> = input.lines().collect();
+    let mut result = String::new();
+    let mut in_quote = false;
+    let mut quote_content = String::new();
+
+    for line in lines {
+        let trimmed = line.trim_start();
+
+        if trimmed.starts_with('>') {
+            let content = trimmed[1..].trim_start();
+
+            if !in_quote {
+                in_quote = true;
+                quote_content.clear();
+            }
+
+            if !quote_content.is_empty() {
+                quote_content.push('\n');
+            }
+            quote_content.push_str(content);
+        } else {
+            if in_quote {
+                result.push_str(&format!("<blockquote>{}</blockquote>\n", quote_content));
+                in_quote = false;
+                quote_content.clear();
+            }
+            result.push_str(line);
+            result.push('\n');
+        }
+    }
+    if in_quote {
+        result.push_str(&format!("<blockquote>{}</blockquote>\n", quote_content));
+    }
+
+    result.trim_end().to_string()
+}
+
 pub fn parse_markdown(input: &str) -> String {
     let result = input.to_string();
     result
